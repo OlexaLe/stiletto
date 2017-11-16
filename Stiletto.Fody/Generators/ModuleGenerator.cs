@@ -292,7 +292,7 @@ namespace Stiletto.Fody.Generators
                 MethodAttributes.Public | MethodAttributes.Virtual,
                 References.Void);
 
-            var vModule = new VariableDefinition("module", importedModuleType);
+            var vModule = new VariableDefinition(importedModuleType);
             getBindings.Body.Variables.Add(vModule);
             getBindings.Body.InitLocals = true;
 

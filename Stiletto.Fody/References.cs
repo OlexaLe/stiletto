@@ -127,42 +127,42 @@ namespace Stiletto.Fody
             Boolean = module.TypeSystem.Boolean;
 
             var assemblyResolver = module.AssemblyResolver;
-            var mscorlib = assemblyResolver.Resolve("mscorlib");
+            var mscorlib = assemblyResolver.Resolve(AssemblyNameReference.Parse("mscorlib"));
             var mscorlibTypes = mscorlib.MainModule.Types;
 
-            var system = assemblyResolver.Resolve("System");
+            var system = assemblyResolver.Resolve(AssemblyNameReference.Parse("System"));
             var systemTypes = system.MainModule.Types;
 
-            var tDict = module.Import(mscorlibTypes.First(t => t.Name == "Dictionary`2"));
+            var tDict = module.ImportReference(mscorlibTypes.First(t => t.Name == "Dictionary`2"));
 
-            FuncOfT = module.Import(mscorlibTypes.First(t => t.Name == "Func`1"));
-            FuncOfT4 = module.Import(mscorlibTypes.First(t => t.Name == "Func`4"));
-            FuncOfT5 = module.Import(mscorlibTypes.First(t => t.Name == "Func`5"));
-            LazyOfT = module.Import(mscorlibTypes.First(t => t.Name == "Lazy`1"));
+            FuncOfT = module.ImportReference(mscorlibTypes.First(t => t.Name == "Func`1"));
+            FuncOfT4 = module.ImportReference(mscorlibTypes.First(t => t.Name == "Func`4"));
+            FuncOfT5 = module.ImportReference(mscorlibTypes.First(t => t.Name == "Func`5"));
+            LazyOfT = module.ImportReference(mscorlibTypes.First(t => t.Name == "Lazy`1"));
 
             var compilerGeneratedAttribute = mscorlibTypes.First(t => t.Name == "CompilerGeneratedAttribute");
             var compilerGeneratedAttributeCtor = compilerGeneratedAttribute.GetMethod(".ctor");
-            CompilerGeneratedAttribute = module.Import(compilerGeneratedAttributeCtor);
+            CompilerGeneratedAttribute = module.ImportReference(compilerGeneratedAttributeCtor);
 
             var internalsVisibleTo = mscorlibTypes.First(t => t.Name == "InternalsVisibleToAttribute");
             var internalsVisibleToCtor = internalsVisibleTo.GetConstructors().First(c => c.Parameters.Count == 1);
-            InternalsVisibleToAttribute = module.Import(internalsVisibleToCtor);
+            InternalsVisibleToAttribute = module.ImportReference(internalsVisibleToCtor);
 
-            Type = module.Import(mscorlibTypes.First(t => t.Name == "Type"));
-            Type_GetTypeFromHandle = module.Import(Type.Resolve().GetMethod("GetTypeFromHandle"));
+            Type = module.ImportReference(mscorlibTypes.First(t => t.Name == "Type"));
+            Type_GetTypeFromHandle = module.ImportReference(Type.Resolve().GetMethod("GetTypeFromHandle"));
 
-            var tSetOfBindings = module.Import(systemTypes.First(t => t.Name == "ISet`1")).MakeGenericInstanceType(Binding);
-            SetOfBindings = module.Import(tSetOfBindings);
-            SetOfBindings_Add = module.Import(tSetOfBindings.Resolve().GetMethod("Add")).MakeHostInstanceGeneric(Binding);
-            SetOfBindings_UnionWith = module.Import(tSetOfBindings.Resolve().GetMethod("UnionWith")).MakeHostInstanceGeneric(Binding);
+            var tSetOfBindings = module.ImportReference(systemTypes.First(t => t.Name == "ISet`1")).MakeGenericInstanceType(Binding);
+            SetOfBindings = module.ImportReference(tSetOfBindings);
+            SetOfBindings_Add = module.ImportReference(tSetOfBindings.Resolve().GetMethod("Add")).MakeHostInstanceGeneric(Binding);
+            SetOfBindings_UnionWith = module.ImportReference(tSetOfBindings.Resolve().GetMethod("UnionWith")).MakeHostInstanceGeneric(Binding);
 
             // Used in RuntimeModule.GetBindings(IDictionary<string, Binding>);
             var tDictOfStringToBinding = module
-                .Import(mscorlibTypes.First(t => t.Name == "IDictionary`2"))
+                .ImportReference(mscorlibTypes.First(t => t.Name == "IDictionary`2"))
                 .MakeGenericInstanceType(String, Binding);
 
             DictionaryOfStringToBinding = tDictOfStringToBinding;
-            DictionaryOfStringToBinding_Add = module.Import(tDictOfStringToBinding.Resolve().GetMethod("Add"))
+            DictionaryOfStringToBinding_Add = module.ImportReference(tDictOfStringToBinding.Resolve().GetMethod("Add"))
                 .MakeHostInstanceGeneric(String, Binding);
 
             // Used in $CompiledLoader$::.ctor()
@@ -180,53 +180,53 @@ namespace Stiletto.Fody
             var stringComparer = mscorlibTypes.First(t => t.Name == "StringComparer");
             var ordinalProperty = stringComparer.GetProperty("Ordinal");
             var ordinalPropertyGetter = ordinalProperty.GetMethod;
-            StringComparer_Ordinal_Getter = module.Import(ordinalPropertyGetter);
+            StringComparer_Ordinal_Getter = module.ImportReference(ordinalPropertyGetter);
         }
 
         private void ImportStilettoReferences(ModuleDefinition module, StilettoReferences stilettoReferences)
         {
-            Binding = module.Import(stilettoReferences.Binding);
-            Binding_Ctor = module.Import(stilettoReferences.Binding_Ctor);
-            Binding_GetDependencies = module.Import(stilettoReferences.Binding_GetDependencies);
-            Binding_Resolve = module.Import(stilettoReferences.Binding_Resolve);
-            Binding_Get = module.Import(stilettoReferences.Binding_Get);
-            Binding_InjectProperties = module.Import(stilettoReferences.Binding_InjectProperties);
-            Binding_RequiredByGetter = module.Import(stilettoReferences.Binding_RequiredBy_Getter);
-            Binding_IsLibrarySetter = module.Import(stilettoReferences.Binding_IsLibrary_Setter);
+            Binding = module.ImportReference(stilettoReferences.Binding);
+            Binding_Ctor = module.ImportReference(stilettoReferences.Binding_Ctor);
+            Binding_GetDependencies = module.ImportReference(stilettoReferences.Binding_GetDependencies);
+            Binding_Resolve = module.ImportReference(stilettoReferences.Binding_Resolve);
+            Binding_Get = module.ImportReference(stilettoReferences.Binding_Get);
+            Binding_InjectProperties = module.ImportReference(stilettoReferences.Binding_InjectProperties);
+            Binding_RequiredByGetter = module.ImportReference(stilettoReferences.Binding_RequiredBy_Getter);
+            Binding_IsLibrarySetter = module.ImportReference(stilettoReferences.Binding_IsLibrary_Setter);
 
             BindingArray = new ArrayType(Binding);
 
-            SetBindings = module.Import(stilettoReferences.SetBindings);
-            SetBindings_AddOfT = module.Import(stilettoReferences.SetBindings_Add);
+            SetBindings = module.ImportReference(stilettoReferences.SetBindings);
+            SetBindings_AddOfT = module.ImportReference(stilettoReferences.SetBindings_Add);
 
-            RuntimeModule = module.Import(stilettoReferences.RuntimeModule);
-            RuntimeModule_Ctor = module.Import(stilettoReferences.RuntimeModule_Ctor);
-            RuntimeModule_ModuleGetter = module.Import(stilettoReferences.RuntimeModule_Module_Getter);
+            RuntimeModule = module.ImportReference(stilettoReferences.RuntimeModule);
+            RuntimeModule_Ctor = module.ImportReference(stilettoReferences.RuntimeModule_Ctor);
+            RuntimeModule_ModuleGetter = module.ImportReference(stilettoReferences.RuntimeModule_Module_Getter);
 
-            Container = module.Import(stilettoReferences.Container);
-            Container_Create = module.Import(stilettoReferences.Container_Create);
-            Container_CreateWithLoaders = module.Import(stilettoReferences.Container_CreateWithLoaders);
+            Container = module.ImportReference(stilettoReferences.Container);
+            Container_Create = module.ImportReference(stilettoReferences.Container_Create);
+            Container_CreateWithLoaders = module.ImportReference(stilettoReferences.Container_CreateWithLoaders);
 
-            ILoader = module.Import(stilettoReferences.ILoader);
-            ILoader_GetInjectBinding = module.Import(stilettoReferences.ILoader_GetInjectBinding);
-            ILoader_GetLazyInjectBinding = module.Import(stilettoReferences.ILoader_GetLazyInjectBinding);
-            ILoader_GetIProviderInjectBinding = module.Import(stilettoReferences.ILoader_GetIProviderInjectBinding);
-            ILoader_GetRuntimeModue = module.Import(stilettoReferences.ILoader_GetRuntimeModue);
+            ILoader = module.ImportReference(stilettoReferences.ILoader);
+            ILoader_GetInjectBinding = module.ImportReference(stilettoReferences.ILoader_GetInjectBinding);
+            ILoader_GetLazyInjectBinding = module.ImportReference(stilettoReferences.ILoader_GetLazyInjectBinding);
+            ILoader_GetIProviderInjectBinding = module.ImportReference(stilettoReferences.ILoader_GetIProviderInjectBinding);
+            ILoader_GetRuntimeModue = module.ImportReference(stilettoReferences.ILoader_GetRuntimeModue);
 
-            IProviderOfT = module.Import(stilettoReferences.IProviderOfT);
-            IProviderOfT_Get = module.Import(stilettoReferences.IProviderOfT_Get);
+            IProviderOfT = module.ImportReference(stilettoReferences.IProviderOfT);
+            IProviderOfT_Get = module.ImportReference(stilettoReferences.IProviderOfT_Get);
 
-            Resolver = module.Import(stilettoReferences.Resolver);
-            Resolver_RequestBinding = module.Import(stilettoReferences.Resolver_RequestBinding);
+            Resolver = module.ImportReference(stilettoReferences.Resolver);
+            Resolver_RequestBinding = module.ImportReference(stilettoReferences.Resolver_RequestBinding);
 
-            InjectAttribute = module.Import(stilettoReferences.InjectAttribute);
-            ModuleAttribute = module.Import(stilettoReferences.ModuleAttribute);
-            ProvidesAttribute = module.Import(stilettoReferences.ProvidesAttribute);
-            NamedAttribute = module.Import(stilettoReferences.NamedAttribute);
-            SingletonAttribute = module.Import(stilettoReferences.SingletonAttribute);
+            InjectAttribute = module.ImportReference(stilettoReferences.InjectAttribute);
+            ModuleAttribute = module.ImportReference(stilettoReferences.ModuleAttribute);
+            ProvidesAttribute = module.ImportReference(stilettoReferences.ProvidesAttribute);
+            NamedAttribute = module.ImportReference(stilettoReferences.NamedAttribute);
+            SingletonAttribute = module.ImportReference(stilettoReferences.SingletonAttribute);
 
-            ProcessedAssemblyAttribute = module.Import(stilettoReferences.ProcessedAssemblyAttribute);
-            ProcessedAssemblyAttribute_Ctor = module.Import(stilettoReferences.ProcessedAssemblyAttribute_Ctor);
+            ProcessedAssemblyAttribute = module.ImportReference(stilettoReferences.ProcessedAssemblyAttribute);
+            ProcessedAssemblyAttribute_Ctor = module.ImportReference(stilettoReferences.ProcessedAssemblyAttribute_Ctor);
         }
 
         private void ImportInjectBindingDictionary(ModuleDefinition module, TypeReference tDict)
@@ -237,7 +237,7 @@ namespace Stiletto.Fody
 
             DictionaryOfStringToBindingFn = tDictOfStringToBindingFn;
             DictionaryOfStringToBindingFn_New =
-                module.Import(
+                module.ImportReference(
                     tDictOfStringToBindingFn.Resolve()
                                             .Methods
                                             .First(
@@ -247,10 +247,10 @@ namespace Stiletto.Fody
                                                 c.Parameters[0].ParameterType.Name.StartsWith("IEqualityComparer")))
                       .MakeHostInstanceGeneric(String, tFuncOfBinding);
             DictionaryOfStringToBindingFn_Add =
-                module.Import(tDictOfStringToBindingFn.Resolve().GetMethod("Add"))
+                module.ImportReference(tDictOfStringToBindingFn.Resolve().GetMethod("Add"))
                       .MakeHostInstanceGeneric(String, tFuncOfBinding);
             DictionaryOfStringToBindingFn_TryGetValue =
-                module.Import(tDictOfStringToBindingFn.Resolve().GetMethod("TryGetValue"))
+                module.ImportReference(tDictOfStringToBindingFn.Resolve().GetMethod("TryGetValue"))
                       .MakeHostInstanceGeneric(String, tFuncOfBinding);
         }
 
@@ -258,15 +258,15 @@ namespace Stiletto.Fody
         {
             var tFuncOfModule = FuncOfT.MakeGenericInstanceType(RuntimeModule);
             var tModuleDict = tDict.MakeGenericInstanceType(Type, tFuncOfModule);
-            DictionaryOfTypeToModuleFn = module.Import(tModuleDict);
+            DictionaryOfTypeToModuleFn = module.ImportReference(tModuleDict);
             DictionaryOfTypeToModuleFn_New =
-                module.Import(tModuleDict.Resolve()
+                module.ImportReference(tModuleDict.Resolve()
                                          .GetDefaultConstructor())
                       .MakeHostInstanceGeneric(Type, tFuncOfModule);
             DictionaryOfTypeToModuleFn_Add =
-                module.Import(tModuleDict.Resolve().GetMethod("Add")).MakeHostInstanceGeneric(Type, tFuncOfModule);
+                module.ImportReference(tModuleDict.Resolve().GetMethod("Add")).MakeHostInstanceGeneric(Type, tFuncOfModule);
             DictionaryOfTypeToModuleFn_TryGetValue =
-                module.Import(tModuleDict.Resolve().GetMethod("TryGetValue"))
+                module.ImportReference(tModuleDict.Resolve().GetMethod("TryGetValue"))
                       .MakeHostInstanceGeneric(Type, tFuncOfModule);
         }
 
@@ -276,7 +276,7 @@ namespace Stiletto.Fody
             var tProviderDict = tDict.MakeGenericInstanceType(String, tFuncOfProviderBinding);
             DictionaryOfStringToProviderBindingFn = tProviderDict;
             DictionaryOfStringToProviderBindingFn_New =
-                module.Import(tProviderDict.Resolve()
+                module.ImportReference(tProviderDict.Resolve()
                                            .GetConstructors()
                                            .First(
                                                c =>
@@ -284,10 +284,10 @@ namespace Stiletto.Fody
                                                c.Parameters[0].ParameterType.Name.StartsWith("IEqualityComparer")))
                       .MakeHostInstanceGeneric(String, tFuncOfProviderBinding);
             DictionaryOfStringToProviderBindingFn_Add =
-                module.Import(tProviderDict.Resolve().GetMethod("Add"))
+                module.ImportReference(tProviderDict.Resolve().GetMethod("Add"))
                       .MakeHostInstanceGeneric(String, tFuncOfProviderBinding);
             DictionaryOfStringToProviderBindingFn_TryGetValue =
-                module.Import(tProviderDict.Resolve().GetMethod("TryGetValue"))
+                module.ImportReference(tProviderDict.Resolve().GetMethod("TryGetValue"))
                       .MakeHostInstanceGeneric(String, tFuncOfProviderBinding);
         }
 
@@ -295,9 +295,9 @@ namespace Stiletto.Fody
         {
             var tFuncOfLazyBinding = FuncOfT4.MakeGenericInstanceType(String, Object, String, Binding);
             var tLazyBindingDict = tDict.MakeGenericInstanceType(String, tFuncOfLazyBinding);
-            DictionaryOfStringToLazyBindingFn = module.Import(tLazyBindingDict);
+            DictionaryOfStringToLazyBindingFn = module.ImportReference(tLazyBindingDict);
             DictionaryOfStringToLazyBindingFn_New =
-                module.Import(tLazyBindingDict.Resolve()
+                module.ImportReference(tLazyBindingDict.Resolve()
                                               .GetConstructors()
                                               .First(
                                                   c =>
@@ -305,10 +305,10 @@ namespace Stiletto.Fody
                                                   c.Parameters[0].ParameterType.Name.StartsWith("IEqualityComparer")))
                       .MakeHostInstanceGeneric(String, tFuncOfLazyBinding);
             DictionaryOfStringToLazyBindingFn_Add =
-                module.Import(tLazyBindingDict.Resolve().GetMethod("Add"))
+                module.ImportReference(tLazyBindingDict.Resolve().GetMethod("Add"))
                       .MakeHostInstanceGeneric(String, tFuncOfLazyBinding);
             DictionaryOfStringToLazyBindingFn_TryGetValue =
-                module.Import(tLazyBindingDict.Resolve().GetMethod("TryGetValue"))
+                module.ImportReference(tLazyBindingDict.Resolve().GetMethod("TryGetValue"))
                       .MakeHostInstanceGeneric(String, tFuncOfLazyBinding);
         }
     }

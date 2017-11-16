@@ -18,6 +18,7 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
+using Mono.Collections.Generic;
 using Stiletto.Internal.Loaders.Codegen;
 
 namespace Stiletto.Fody.Generators
@@ -61,8 +62,10 @@ namespace Stiletto.Fody.Generators
                 References.Binding);
 
             var providerOfT = References.IProviderOfT.MakeGenericInstanceType(providedType);
-
-            t.Interfaces.Add(providerOfT);
+            
+            var interfaceImplementation = new InterfaceImplementation(providerOfT);
+            
+            t.Interfaces.Add(interfaceImplementation);
             t.CustomAttributes.Add(new CustomAttribute(References.CompilerGeneratedAttribute));
 
             var providerOfT_get = Import(providerOfT.Resolve()

@@ -87,7 +87,7 @@ namespace Stiletto.Fody
         /// </returns>
         public static StilettoReferences Create(IAssemblyResolver assemblyResolver)
         {
-            var stiletto = assemblyResolver.Resolve("Stiletto").MainModule;
+            var stiletto = assemblyResolver.Resolve(AssemblyNameReference.Parse("Stiletto")).MainModule;
             var types = stiletto
                 .GetAllTypes()
                 .Where(t => t.IsPublic)
