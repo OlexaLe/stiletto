@@ -1,6 +1,6 @@
 ﻿namespace Example
 {
-    interface IPump
+    public interface IPump
     {
         void Pump();
     }

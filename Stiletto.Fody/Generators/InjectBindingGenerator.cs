@@ -292,7 +292,7 @@ namespace Stiletto.Fody.Generators
             resolve.Parameters.Add(new ParameterDefinition(References.Resolver));
 
             var vParamsArray = paramsField != null
-                                   ? new VariableDefinition("ctorParamsBindings", References.BindingArray)
+                                   ? new VariableDefinition(References.BindingArray)
                                    : null;
 
             if (vParamsArray != null)
@@ -415,7 +415,7 @@ namespace Stiletto.Fody.Generators
             VariableDefinition vResult = null;
             if (injectProperties != null)
             {
-                vResult = new VariableDefinition("result", References.Object);
+                vResult = new VariableDefinition(References.Object);
                 get.Body.Variables.Add(vResult);
                 get.Body.InitLocals = true;
             }
@@ -463,7 +463,7 @@ namespace Stiletto.Fody.Generators
 
             injectProperties.Parameters.Add(new ParameterDefinition(References.Object));
 
-            var vObj = new VariableDefinition("inject", importedInjectedType);
+            var vObj = new VariableDefinition(importedInjectedType);
             injectProperties.Body.Variables.Add(vObj);
             injectProperties.Body.InitLocals = true;
 

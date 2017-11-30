@@ -4,7 +4,7 @@ using LibraryExample;
 
 namespace Example
 {
-    class CoffeeMaker
+    public class CoffeeMaker
     {
         [Inject]
         public Lazy<IHeater> Heater { get; set; }

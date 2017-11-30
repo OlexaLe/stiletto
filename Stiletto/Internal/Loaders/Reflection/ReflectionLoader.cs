@@ -49,7 +49,7 @@ namespace Stiletto.Internal.Loaders.Reflection
         {
             FailIfNoReflection();
             var attr = moduleType.GetSingleAttribute<ModuleAttribute>();
-
+            
             if (moduleType.BaseType != typeof(object))
             {
                 throw new BindingException("Modules must inherit only from System.Object.");

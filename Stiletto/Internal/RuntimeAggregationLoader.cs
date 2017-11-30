@@ -132,7 +132,8 @@ namespace Stiletto.Internal
             {
                 try
                 {
-                    var m = loaders[i].GetRuntimeModule(moduleType, moduleInstance);
+                    var l = loaders[i];
+                    var m = l.GetRuntimeModule(moduleType, moduleInstance);
 
                     if (m == null)
                     {
@@ -147,7 +148,7 @@ namespace Stiletto.Internal
                     m.Module = moduleInstance ?? m.CreateModule();
                     return m;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     if (i == loaders.Count - 1)
                     {

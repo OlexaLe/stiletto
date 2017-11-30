@@ -67,10 +67,10 @@ namespace Stiletto
 
         private class StilettoContainer : Container
         {
-            private readonly StilettoContainer baseContainer;
-            private readonly Resolver resolver;
-            private readonly IDictionary<string, Type> injectTypes;
-            private readonly ILoader loader;
+            private readonly StilettoContainer _baseContainer;
+            private readonly Resolver _resolver;
+            private readonly IDictionary<string, Type> _injectTypes;
+            private readonly ILoader _loader;
 
             private StilettoContainer(
                 StilettoContainer baseContainer,
@@ -78,10 +78,10 @@ namespace Stiletto
                 ILoader loader,
                 IDictionary<string, Type> injectTypes)
             {
-                this.baseContainer = baseContainer;
-                this.resolver = resolver;
-                this.loader = loader;
-                this.injectTypes = injectTypes;
+                _baseContainer = baseContainer;
+                _resolver = resolver;
+                _loader = loader;
+                _injectTypes = injectTypes;
             }
 
             internal static StilettoContainer MakeContainer(
@@ -106,7 +106,7 @@ namespace Stiletto
                 }
 
                 var resolver = new Resolver(
-                    baseContainer != null ? baseContainer.resolver : null,
+                    baseContainer != null ? baseContainer._resolver : null,
                     loader,
                     HandleErrors);
 
@@ -119,7 +119,7 @@ namespace Stiletto
             public override Container Add(params object[] modules)
             {
                 ResolveAllBindings();
-                return MakeContainer(this, loader, modules);
+                return MakeContainer(this, _loader, modules);
             }
 
             public override T Get<T>()
@@ -154,27 +154,27 @@ namespace Stiletto
 
             private IDictionary<string, Binding> ResolveAllBindings()
             {
-                lock (resolver)
+                lock (_resolver)
                 {
                     ResolveInjectTypes();
-                    return resolver.ResolveAllBindings();
+                    return _resolver.ResolveAllBindings();
                 }
             }
 
             private void ResolveInjectTypes()
             {
-                foreach (var kvp in injectTypes)
+                foreach (var kvp in _injectTypes)
                 {
-                    resolver.RequestBinding(kvp.Key, kvp.Value, false);
+                    _resolver.RequestBinding(kvp.Key, kvp.Value, false);
                 }
             }
 
             private Binding GetInjectBinding(string membersKey, string key)
             {
                 Type moduleType = null;
-                for (var container = this; container != null; container = container.baseContainer)
+                for (var container = this; container != null; container = container._baseContainer)
                 {
-                    if (container.injectTypes.TryGetValue(membersKey, out moduleType) && moduleType != null)
+                    if (container._injectTypes.TryGetValue(membersKey, out moduleType) && moduleType != null)
                         break;
                 }
 
@@ -183,13 +183,13 @@ namespace Stiletto
                     throw new ArgumentException("No Injects entry for " + membersKey + ".  You must add this type to one of your modules' Injects list.");
                 }
 
-                lock (resolver)
+                lock (_resolver)
                 {
-                    var binding = resolver.RequestBinding(key, moduleType, false);
+                    var binding = _resolver.RequestBinding(key, moduleType, false);
                     if (binding == null || !binding.IsResolved)
                     {
-                        resolver.ResolveEnqueuedBindings();
-                        binding = resolver.RequestBinding(key, moduleType, false);
+                        _resolver.ResolveEnqueuedBindings();
+                        binding = _resolver.RequestBinding(key, moduleType, false);
                     }
 
                     return binding;

@@ -333,9 +333,7 @@ namespace Stiletto.Fody
 
                     if (loadersArray == null)
                     {
-                        loadersArray = new VariableDefinition(
-                            "loaders",
-                            arrayOfILoader);
+                        loadersArray = new VariableDefinition(arrayOfILoader);
                         method.Body.Variables.Add(loadersArray);
                         method.Body.InitLocals = true;
                     }

@@ -23,57 +23,32 @@ namespace Stiletto.Internal
 {
     public abstract class RuntimeModule
     {
-        private readonly Type moduleType;
-        private readonly string[] injects;
-        private readonly Type[] includes;
-        private readonly bool complete;
-        private readonly bool isLibrary;
-        private readonly bool isOverride;
+        protected Type ModuleType { get; }
 
-        protected Type ModuleType
-        {
-            get { return moduleType; }
-        }
+        public string[] Injects { get; }
 
-        public string[] Injects
-        {
-            get { return injects; }
-        }
+        public Type[] Includes { get; }
 
-        public Type[] Includes
-        {
-            get { return includes; }
-        }
+        public bool IsComplete { get; }
 
-        public bool IsComplete
-        {
-            get { return complete; }
-        }
+        public bool IsLibrary { get; }
 
-        public bool IsLibrary
-        {
-            get { return isLibrary; }
-        }
-
-        public bool IsOverride
-        {
-            get { return isOverride; }
-        }
+        public bool IsOverride { get; }
 
         public object Module { get; set; }
 
-        protected RuntimeModule(Type moduleType, string[] injects, Type[] includes, bool complete, bool isLibrary, bool isOverride)
+        protected RuntimeModule(Type moduleType, string[] injects, Type[] includes, bool? complete, bool? isLibrary, bool? isOverride)
         {
             Conditions.CheckNotNull(moduleType, "moduleType");
             Conditions.CheckNotNull(injects, "injects");
             Conditions.CheckNotNull(includes, "includes");
 
-            this.moduleType = moduleType;
-            this.injects = injects;
-            this.includes = includes;
-            this.complete = complete;
-            this.isLibrary = isLibrary;
-            this.isOverride = isOverride;
+            ModuleType = moduleType;
+            Injects = injects;
+            Includes = includes;
+            IsComplete = complete ?? false;
+            IsLibrary = isLibrary ?? false;
+            IsOverride = isOverride ?? false;
         }
 
         public virtual void GetBindings(IDictionary<string, Binding> bindings)

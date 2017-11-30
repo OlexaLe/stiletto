@@ -144,7 +144,9 @@ namespace Stiletto.Fody.Generators
                 TypeAttributes.Public | TypeAttributes.Sealed,
                 References.Object);
 
-            loader.Interfaces.Add(References.ILoader);
+            var interfaceImplementation = new InterfaceImplementation(References.ILoader);
+            
+            loader.Interfaces.Add(interfaceImplementation);
             loader.CustomAttributes.Add(new CustomAttribute(References.CompilerGeneratedAttribute));
 
             injectsField = new FieldDefinition("bindings", FieldAttributes.Private, References.DictionaryOfStringToBindingFn);
@@ -370,7 +372,7 @@ namespace Stiletto.Fody.Generators
              * }
              */
             var factory = new MethodDefinition(
-                "ModuleFactory_" + (factoryMethodsGenerated++),
+                $"ModuleFactory_{factoryMethodsGenerated++}",
                 MethodAttributes.Private,
                 References.RuntimeModule);
 
@@ -399,7 +401,7 @@ namespace Stiletto.Fody.Generators
             getInjectBinding.Parameters.Add(new ParameterDefinition("className", ParameterAttributes.None, References.String));
             getInjectBinding.Parameters.Add(new ParameterDefinition("mustBeInjectable", ParameterAttributes.None, References.Boolean));
 
-            var vBindingFn = new VariableDefinition("bindingFn", bindingFnType);
+            var vBindingFn = new VariableDefinition(bindingFnType);
             getInjectBinding.Body.Variables.Add(vBindingFn);
             getInjectBinding.Body.InitLocals = true;
 

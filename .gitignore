@@ -24,3 +24,5 @@ graphviz/
 
 # Integration test detritus
 IntegrationTests/ValidateBuilds.exe
+
+\.idea/
