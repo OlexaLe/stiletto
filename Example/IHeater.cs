@@ -1,6 +1,6 @@
 ﻿namespace Example
 {
-    interface IHeater
+    public interface IHeater
     {
         bool IsHot { get; }
         void On();

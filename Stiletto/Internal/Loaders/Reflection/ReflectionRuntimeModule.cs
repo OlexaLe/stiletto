@@ -28,11 +28,11 @@ namespace Stiletto.Internal.Loaders.Reflection
 
         public ReflectionRuntimeModule(Type moduleType, ModuleAttribute attribute)
             : base(moduleType,
-                   attribute.Injects.Select(Key.GetMemberKey).ToArray(),
-                   attribute.IncludedModules,
-                   attribute.IsComplete,
-                   attribute.IsLibrary,
-                   attribute.IsOverride)
+                   attribute?.Injects.Select(Key.GetMemberKey).ToArray(),
+                   attribute?.IncludedModules,
+                   attribute?.IsComplete,
+                   attribute?.IsLibrary,
+                   attribute?.IsOverride)
         {
         }
 
