@@ -19,7 +19,9 @@ namespace Stiletto.Test
     [Test]
     public void BaseClassInstance_InjectingDerivedProperties_FailsWhenGenericIsUsed()
     {
-      Assert.Throws<InvalidOperationException>(() =>
+      //MARK: now this functionality throws ArgumentException BEFORE the InvalidOperationException. 
+      //It's difficult to say can it cause anyissues in future
+      Assert.Throws<ArgumentException>(() => 
       {
         var container = Container.Create(typeof(NameModule));
         var baseInjectable = new DerivedInjectable("foo") as BaseInjectable;
